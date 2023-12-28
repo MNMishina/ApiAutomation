@@ -1,4 +1,4 @@
-package api;
+package rest_assured;
 
 public class UserData {
     public Integer id;

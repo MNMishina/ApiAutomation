@@ -1,8 +1,7 @@
-package api;
+package rest_assured;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.builder.ResponseBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
@@ -29,6 +28,12 @@ public class Specifications {
     public static ResponseSpecification responseSpecError400() {
         return new ResponseSpecBuilder()
                 .expectStatusCode(400)
+                .build();
+    }
+
+    public static ResponseSpecification responseUniqSpec(int status) {
+        return new ResponseSpecBuilder()
+                .expectStatusCode(status)
                 .build();
     }
 }
