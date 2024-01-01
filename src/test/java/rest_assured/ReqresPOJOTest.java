@@ -1,33 +1,33 @@
+/*
+        1. Получить данные пользователей со 2й страницы сайта https://reqres.in
+        2. Проверить, что id юзеров содержатся в их аватаре
+        3. Проверить, что е-мейл юзеров заканчивается на @reqres.in
+ */
+
+
 package rest_assured;
 
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
-
 import java.time.Clock;
-import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
-import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ReqresTestShortVersion {
+public class ReqresPOJOTest {
     private final static String URL = "https://reqres.in";
-
     @Test
     public void checkAvatarAndIdTest() {
         Specifications.installSpecification(Specifications.requestSpec(URL), Specifications.responseSpecOK200());
         List<UserData> users = given()
                 .when()
-                .get("/rest_assured/users?page=2")
+                .get("/api/users?page=2")
                 .then().log().all()
                 .extract().body().jsonPath().getList("data", UserData.class);
 
         users.forEach(x -> Assert.assertTrue(x.getAvatar().contains(x.getId().toString())));
         Assert.assertTrue(users.stream().allMatch(x -> x.getEmail().endsWith("@reqres.in")));
     }
-
     @Test
     public void successRegTest() {
         Integer id = 4;
@@ -46,7 +46,6 @@ public class ReqresTestShortVersion {
         Assert.assertEquals(id, regSuccess.getId());
         Assert.assertEquals(token, regSuccess.getToken());
     }
-
     @Test
     public void unsuccessRegTest() {
         Specifications.installSpecification(Specifications.requestSpec(URL), Specifications.responseSpecError400());
@@ -59,7 +58,6 @@ public class ReqresTestShortVersion {
                 .extract().as(RegistrationFail.class);
         Assert.assertEquals(regFail.getError(), "Missing password");
     }
-
     @Test
     public void sortedYearsTest() {
         Specifications.installSpecification(Specifications.requestSpec(URL), Specifications.responseSpecOK200());
@@ -101,5 +99,4 @@ public class ReqresTestShortVersion {
         System.out.println(currentTime);
         System.out.println(response.getUpdatedAt().replaceAll(regex, ""));
     }
-
 }
